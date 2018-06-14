@@ -2,8 +2,13 @@
   "name": "vue-evently",
   "version": "0.1.0",
   "description": "Easily create reusable components with better events",
-  "main": "index.js",
+  "main": "index.dist.js",
+  "module": "index.js",
   "repository": "git@github.com:Kelin2025/vue-evently.git",
   "author": "Anton Kosykh <kelin2025@yandex.ru>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  }
 }

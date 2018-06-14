@@ -9,7 +9,8 @@ export default {
     }
 
     this.$evently = {
-      $emit(evt, ...args) {
+      emit(evt, ...args) {
+        call(evt, "start", ...args)
         self.$emit(`sync:${evt}`, ...args)
         if (!self.$listeners[`async:${evt}`]) return null
         return new Promise((resolve, reject) => {
@@ -23,6 +24,9 @@ export default {
               call(evt, "fail", res)
               call(evt, "finish", res, false)
               reject(res)
+            },
+            trigger(method, ...args) {
+              call(evt, method, ...args)
             }
           })
         })
