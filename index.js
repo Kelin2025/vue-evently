@@ -2,34 +2,63 @@ export default {
   beforeCreate() {
     const self = this
 
-    const call = (evt, method, ...res) => {
+    const createCaller = evt => (method, ...res) => {
       if (self[`${evt}:${method}`]) {
         self[`${evt}:${method}`](...res)
       }
     }
 
-    this.$evently = {
+    self.$evently = {
       emit(evt, ...args) {
-        call(evt, "start", ...args)
-        self.$emit(`sync:${evt}`, ...args)
-        if (!self.$listeners[`async:${evt}`]) return null
+        const call = createCaller(evt)
+
+        call("start", ...args)
+        if (!self.$listeners[evt]) return null
         return new Promise((resolve, reject) => {
-          self.$emit(`async:${evt}`, ...args, {
+          self.$emit(evt, ...args, {
             resolve(res) {
-              call(evt, "done", res)
-              call(evt, "finish", res, true)
+              call("done", res)
+              call("finish", res, true)
               resolve(res)
             },
             reject(res) {
-              call(evt, "fail", res)
-              call(evt, "finish", res, false)
+              call("fail", res)
+              call("finish", res, false)
               reject(res)
             },
             trigger(method, ...args) {
-              call(evt, method, ...args)
+              call(method, ...args)
             }
           })
         })
+      },
+      share(evt) {
+        const call = createCaller(evt)
+
+        return (...args) => {
+          const child = args.slice(-1)[0]
+
+          return new Promise((resolve, reject) => {
+            self.$emit(evt, ...args.slice(0, -1), {
+              resolve(res) {
+                child.resolve(res)
+                call("done", res)
+                call("finish", res, true)
+                resolve(res)
+              },
+              reject(res) {
+                child.reject(res)
+                call("fail", res)
+                call("finish", res, true)
+                resolve(reject)
+              },
+              trigger(method, ...args) {
+                child.trigger(method, ...args)
+                call(method, ...args)
+              }
+            })
+          })
+        }
       }
     }
   }
