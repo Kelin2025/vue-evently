@@ -4,7 +4,9 @@ export default {
 
     const createCaller = evt => (method, ...res) => {
       if (self[`${evt}:${method}`]) {
-        self[`${evt}:${method}`](...res)
+        return self[`${evt}:${method}`](...res)
+      } else {
+        return null
       }
     }
 
@@ -27,7 +29,7 @@ export default {
               reject(res)
             },
             trigger(method, ...args) {
-              call(method, ...args)
+              return call(method, ...args)
             }
           })
         })
@@ -41,19 +43,14 @@ export default {
           self.$emit(evt, ...data, {
             resolve(res) {
               child.resolve(res)
-              call("done", res)
-              call("finish", res, true)
               resolve(res)
             },
             reject(res) {
               child.reject(res)
-              call("fail", res)
-              call("finish", res, true)
-              resolve(reject)
+              reject(res)
             },
             trigger(method, ...args) {
-              child.trigger(method, ...args)
-              call(method, ...args)
+              return child.trigger(method, ...args)
             }
           })
         })
