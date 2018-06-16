@@ -32,14 +32,14 @@ export default {
           })
         })
       },
-      share(evt) {
+      share(evt, ...data) {
         const call = createCaller(evt)
 
         return (...args) => {
           const child = args.slice(-1)[0]
 
           return new Promise((resolve, reject) => {
-            self.$emit(evt, ...args.slice(0, -1), {
+            self.$emit(evt, ...args.slice(0, -1), ...data, {
               resolve(res) {
                 child.resolve(res)
                 call("done", res)
