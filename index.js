@@ -39,7 +39,7 @@ export default {
           const child = args.slice(-1)[0]
 
           return new Promise((resolve, reject) => {
-            self.$emit(evt, ...args.slice(0, -1), ...data, {
+            self.$emit(evt, ...data, {
               resolve(res) {
                 child.resolve(res)
                 call("done", res)
