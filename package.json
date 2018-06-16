@@ -1,6 +1,6 @@
 {
   "name": "vue-evently",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Easily create reusable components with better events",
   "main": "index.dist.js",
   "module": "index.js",
