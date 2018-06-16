@@ -35,8 +35,6 @@ export default {
         })
       },
       share(evt, ...data) {
-        const call = createCaller(evt)
-
         const child = data.slice(-1)[0]
 
         return new Promise((resolve, reject) => {
