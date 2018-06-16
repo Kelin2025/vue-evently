@@ -35,30 +35,28 @@ export default {
       share(evt, ...data) {
         const call = createCaller(evt)
 
-        return (...args) => {
-          const child = args.slice(-1)[0]
+        const child = data.slice(-1)[0]
 
-          return new Promise((resolve, reject) => {
-            self.$emit(evt, ...data, {
-              resolve(res) {
-                child.resolve(res)
-                call("done", res)
-                call("finish", res, true)
-                resolve(res)
-              },
-              reject(res) {
-                child.reject(res)
-                call("fail", res)
-                call("finish", res, true)
-                resolve(reject)
-              },
-              trigger(method, ...args) {
-                child.trigger(method, ...args)
-                call(method, ...args)
-              }
-            })
+        return new Promise((resolve, reject) => {
+          self.$emit(evt, ...data, {
+            resolve(res) {
+              child.resolve(res)
+              call("done", res)
+              call("finish", res, true)
+              resolve(res)
+            },
+            reject(res) {
+              child.reject(res)
+              call("fail", res)
+              call("finish", res, true)
+              resolve(reject)
+            },
+            trigger(method, ...args) {
+              child.trigger(method, ...args)
+              call(method, ...args)
+            }
           })
-        }
+        })
       }
     }
   }
