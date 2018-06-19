@@ -38,7 +38,7 @@ export default {
         const child = data.slice(-1)[0]
 
         return new Promise((resolve, reject) => {
-          self.$emit(evt, ...data, {
+          self.$emit(evt, ...data.slice(0, -1), {
             resolve(res) {
               child.resolve(res)
               resolve(res)
